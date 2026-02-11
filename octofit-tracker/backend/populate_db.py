@@ -22,9 +22,11 @@ def create_users():
 def create_teams(users):
     teams = []
     for i in range(2):
-        team, created = Team.objects.get_or_create(name=f"Team{i+1}")
+        team_name = f"Team{i+1}"
+        Team.objects.filter(name=team_name).delete()  # Ensure uniqueness
         team_members = random.sample(users, k=3)
-        team.members.set(team_members)
+        member_usernames = [user.username for user in team_members]
+        team = Team.objects.create(name=team_name, member_usernames=member_usernames)
         teams.append(team)
     print(f"Created {len(teams)} teams.")
     return teams
@@ -73,20 +75,10 @@ def main():
     leaderboard = create_leaderboard(users)
     workouts = create_workouts(users)
 
-if __name__ == '__main__':
-    main()
-import os
-import django
-import random
-from datetime import datetime, timedelta
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'octofit_tracker.settings')
 django.setup()
-
-from django.contrib.auth.models import User
-from octofit_tracker.models import (
-    # Add your models here when implemented
-)
+if __name__ == '__main__':
+    main()
 
 def create_users():
     users = []

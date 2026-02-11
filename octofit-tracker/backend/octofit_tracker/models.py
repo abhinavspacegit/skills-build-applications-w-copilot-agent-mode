@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Team(models.Model):
 	name = models.CharField(max_length=100, unique=True)
-	members = models.ManyToManyField(User, related_name='teams')
+	member_usernames = models.JSONField(default=list)  # Store usernames as a list
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
